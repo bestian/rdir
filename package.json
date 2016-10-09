@@ -1,0 +1,25 @@
+{
+  "name": "rdir",
+  "version": "0.0.1",
+  "description": "redirector generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "rdir"
+  },
+  "repository": {
+    "type": "git",
+    "url": "rdir"
+  },
+  "keywords": [
+    "html",
+    "generator"
+  ],
+  "author": "Bestian Tang",
+  "license": "MIT",
+  "bin": {
+    "rdir": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}
