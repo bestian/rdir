@@ -28,6 +28,19 @@ var favicon_link = '';
 */
 
 function buildHTML(name, favicon_link){
+  var dot = '.';
+  var l = name.split(/\//).length;
+  if (l == 2) dot = '..';
+  // if (l == 3) dot = '../..';
+  // if (l == 4) dot = '../../..';
+  // if (l == 5) dot = '../../../..';
+
+  if (l >= 3) { 
+    for (var i = 0; i < l-3; i++) {
+      dot = '../' + dot;
+    }
+  }
+
   var html =
     [ '<!DOCTYPE HTML>',
       '<html>',
@@ -35,10 +48,10 @@ function buildHTML(name, favicon_link){
           '<meta charset="utf-8">',
           '<title>'+name+'</title>',
           favicon_link,
-          '<meta http-equiv="refresh" content="0;url=\'./index.html#'+name+'\'" />',
+          '<meta http-equiv="refresh" content="0;url=\''+dot+'/index.html#'+name+'\'" />',
         '</head>',
         '<body>',
-          '<p><a href="./index#'+name+'">Redirect</a></p>',
+          '<p><a href="'+dot+'/index#'+name+'">Redirect</a></p>',
         '</body>',
       '</html>'
     ].join('\n');
