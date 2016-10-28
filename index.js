@@ -1,18 +1,25 @@
 #!/usr/bin/env node
 var program = require('commander');
 var fs = require('fs');
+var path  = require('path');
 
-
-//NEXT: array for
-//NEXT: use commander to parse params
-
-
-//TEST: rdir -b start
-//TEST: rdir -b start dig
-//TEST: rdir -b start dig more/basic more/community
+//TEST: rdir -b start,dig,more/basic,more/community
 //TEST: favicon
 
-console.log('Hello, worldly!');
+
+
+function list(val) {
+  return val.split(',');
+}
+
+program
+  .version('0.0.1')
+  .option('-b, --list <items>', 'A list', list)
+  .parse(process.argv);
+
+
+console.log(' your dirs:');
+console.log(' list: %j', program.list);
 
 
 var favicon_link = '';
@@ -35,16 +42,42 @@ function buildHTML(name, favicon_link){
         '</body>',
       '</html>'
     ].join('\n');
-    console.log(html);
+    // console.log(html);
   return html;
 }
 
-var name = 'start';
-var fileName = name + '.html';
 
-var stream = fs.createWriteStream(fileName, favicon_link);
+var dirs = program.list;
 
-stream.once('open', function(fd) {
-  var html = buildHTML(name);
-  stream.end(html);
-});
+
+var mkdirSync = function (path) {
+  try {
+    fs.mkdirSync(path);
+  } catch(e) {
+    if ( e.code != 'EEXIST' ) throw e;
+  }
+}
+
+function mkdirpSync (dirpath) {
+  var parts = dirpath.split(path.sep);
+ // console.log(parts);
+  for( var i = 1; i <= parts.length; i++ ) {
+    mkdirSync( path.join.apply(null, parts.slice(0, i)) );
+  }
+}
+
+dirs.forEach(function(name){
+  var fileName = name + '.html';
+  var folderName = name.replace(/\/[a-zA-Z\-_\d]*$/,'');
+
+//  console.log(folderName);
+
+  mkdirpSync(folderName);
+
+  var stream = fs.createWriteStream(fileName, favicon_link);
+
+  stream.once('open', function(fd) {
+    var html = buildHTML(name);
+    stream.end(html);
+  });
+})
